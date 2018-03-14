@@ -35,8 +35,13 @@ public class Sound {
 		}
 
 	}
+
+	public Sound(Chord chord){
+		this(chord.getFrequencies());
+	}
+
 	public void save(){
-		File out = new File("out10.wav");
+		File out = new File("out.wav");
 		boolean bigEndian = false;
 		boolean signed = true;
 		int bits = 16;

@@ -27,11 +27,12 @@ public class Test {
 //		System.out.println(stats);
 //		System.out.println(stats.getDominant(0.9));
 
-		ArrayList<Double> list = new ArrayList<>();
-		list.add(440.);
-		list.add(6./5.*440.);
-		list.add(660.);
-		Sound sound= new Sound(list);
+		ArrayList<String> list = new ArrayList<>();
+		list.add("A");
+		list.add("C");
+		list.add("E");
+		Chord chord = new Chord(list);
+		Sound sound= new Sound(chord);
 		sound.save();
 
 
