@@ -1,24 +1,38 @@
+import com.sun.media.sound.WaveFileWriter;
+
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Test {
-	public static void main(String[] args) {
+	public static void main(String[] args){
 
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(new File("od.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		BufferedImage image = null;
+//		try {
+//			image = ImageIO.read(new File("sea.jpg"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		ImageStatistics stats = new ImageStatistics(image);
+//
+//		System.out.println(stats);
+//		System.out.println(stats.getDominant(0.9));
 
-		ImageStatistics stats = new ImageStatistics(image);
-
-		System.out.println(stats);
-		System.out.println(stats.getDominant(0.8));
-
+		ArrayList<Double> list = new ArrayList<>();
+		list.add(440.);
+		list.add(6./5.*440.);
+		list.add(660.);
+		Sound sound= new Sound(list);
+		sound.save();
 
 
 	}
