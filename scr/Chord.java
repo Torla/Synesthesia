@@ -20,7 +20,8 @@ public class Chord {
 	public Chord(ArrayList<String> list){
 		notes.addAll(list);
 		for(String s:list){
-			frequencies.add((noteToFrequencies.get(s)>=noteToFrequencies.get(list.get(0)))?noteToFrequencies.get(s):noteToFrequencies.get(s)*2);
+			//frequencies.add((noteToFrequencies.get(s)>=noteToFrequencies.get(list.get(0)))?noteToFrequencies.get(s):noteToFrequencies.get(s)*2);
+			frequencies.add(noteToFrequencies.get(s));
 		}
 	}
 

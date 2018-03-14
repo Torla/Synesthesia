@@ -15,24 +15,20 @@ import java.util.ArrayList;
 public class Test {
 	public static void main(String[] args){
 
-//		BufferedImage image = null;
-//		try {
-//			image = ImageIO.read(new File("sea.jpg"));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//
-//		ImageStatistics stats = new ImageStatistics(image);
-//
-//		System.out.println(stats);
-//		System.out.println(stats.getDominant(0.9));
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File("van.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		ArrayList<String> list = new ArrayList<>();
-		list.add("A");
-		list.add("C");
-		list.add("E");
-		Chord chord = new Chord(list);
-		Sound sound= new Sound(chord);
+		ImageStatistics stats = new ImageStatistics(image);
+
+		System.out.println(stats);
+		System.out.println(stats.getDominant(0.8));
+		System.out.println(ColorsToChord.convert(stats.getDominant(0.8)));
+
+		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant(0.8))));
 		sound.save();
 
 

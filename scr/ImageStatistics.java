@@ -54,7 +54,10 @@ public class ImageStatistics {
 	}
 
 	ArrayList<String> getDominant(double Threshold){
-		return colorValue.entrySet().stream().filter(x->(x.getValue()>Threshold)).map(Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
+		return colorValue.entrySet().stream().filter(x->(x.getValue()>Threshold))
+				.sorted((y,x)->(Double.compare(x.getValue(),y.getValue())))
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	@Override
