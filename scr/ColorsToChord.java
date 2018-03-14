@@ -18,7 +18,7 @@ public class ColorsToChord {
 		colorToNote.put("LightBlue","D");
 		colorToNote.put("Blue","D#");
 		colorToNote.put("Indigo","E");
-		colorToNote.put("Violet","F");
+		colorToNote.put("Violet","F2");
 	}
 	static ArrayList<String> convert(ArrayList<String> colors){
 		return colors.stream().map(x->(colorToNote.get(x))).collect(Collectors.toCollection(ArrayList::new));

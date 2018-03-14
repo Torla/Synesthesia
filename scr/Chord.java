@@ -5,7 +5,12 @@ public class Chord {
 	static private HashMap<String,Double> noteToFrequencies;
 	static {
 		noteToFrequencies=new HashMap<>();
-		noteToFrequencies.put("A",440.);
+
+		noteToFrequencies.put("F",349.23);
+		noteToFrequencies.put("F#",369.99);
+		noteToFrequencies.put("G",392.00);
+		noteToFrequencies.put("G#",415.30);
+		noteToFrequencies.put("A",440.00);
 		noteToFrequencies.put("A#",466.16);
 		noteToFrequencies.put("B",493.88);
 		noteToFrequencies.put("C",523.25);
@@ -13,10 +18,8 @@ public class Chord {
 		noteToFrequencies.put("D",587.33);
 		noteToFrequencies.put("D#",622.25);
 		noteToFrequencies.put("E",659.25);
-		noteToFrequencies.put("F",698.46);
-		noteToFrequencies.put("F#",739.99);
-		noteToFrequencies.put("G",783.99);
-		noteToFrequencies.put("G#",830.61);
+		noteToFrequencies.put("F2",698.46);
+
 	}
 
 	private ArrayList<String> notes = new ArrayList<>();

@@ -57,11 +57,22 @@ public class ImageStatistics {
 		}
 	}
 
-	ArrayList<String> getDominant(double Threshold){
-		return colorValue.entrySet().stream().filter(x->(x.getValue()>Threshold))
+	ArrayList<String> getDominant(double threshold, int minNotes){
+		ArrayList<String> ret = new ArrayList<>();
+		ArrayList<Map.Entry<String,Double>> sorted= colorValue.entrySet().stream()
 				.sorted((y,x)->(Double.compare(x.getValue(),y.getValue())))
-				.map(Map.Entry::getKey)
 				.collect(Collectors.toCollection(ArrayList::new));
+
+		for(int i=0;i<sorted.size();i++) {
+			if(i<minNotes) ret.add(sorted.get(i).getKey());
+			else {
+				if(colorValue.get(ret.get(i-1))-colorValue.get(sorted.get(i).getKey())>threshold) break;
+				else ret.add(sorted.get(i).getKey());
+			}
+		}
+
+		return ret;
+
 	}
 
 	@Override
