@@ -17,7 +17,7 @@ public class Test {
 
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("van.jpg"));
+			image = ImageIO.read(new File("nasi.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -25,10 +25,10 @@ public class Test {
 		ImageStatistics stats = new ImageStatistics(image);
 
 		System.out.println(stats);
-		System.out.println(stats.getDominant(0.8));
-		System.out.println(ColorsToChord.convert(stats.getDominant(0.8)));
+		System.out.println(stats.getDominant(0.2));
+		System.out.println(ColorsToChord.convert(stats.getDominant(0.2)));
 
-		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant(0.8))));
+		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant(0.2))));
 		sound.save();
 
 

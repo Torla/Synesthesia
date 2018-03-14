@@ -6,11 +6,17 @@ public class ColorsToChord {
 	static private HashMap<String,String> colorToNote;
 	static {
 		colorToNote =new HashMap<>();
-		colorToNote.put("Red","G");
+		colorToNote.put("DeepRed","F");
+		colorToNote.put("Red","F#");
+		colorToNote.put("BrightRed","G");
+		colorToNote.put("DarkOrange","G#");
 		colorToNote.put("Orange","A");
-		colorToNote.put("Yellow","B");
+		colorToNote.put("Yellow","A#");
+		colorToNote.put("LightGreen","B");
 		colorToNote.put("Green","C");
-		colorToNote.put("Blue","D");
+		colorToNote.put("SkyBlue","C#");
+		colorToNote.put("LightBlue","D");
+		colorToNote.put("Blue","D#");
 		colorToNote.put("Indigo","E");
 		colorToNote.put("Violet","F");
 	}
