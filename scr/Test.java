@@ -9,7 +9,7 @@ public class Test {
 
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("image.jpg"));
+			image = ImageIO.read(new File("od.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -17,6 +17,7 @@ public class Test {
 		ImageStatistics stats = new ImageStatistics(image);
 
 		System.out.println(stats);
+		System.out.println(stats.getDominant(0.8));
 
 
 

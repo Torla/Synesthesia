@@ -4,11 +4,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ImageStatistics {
 
 	private BufferedImage image;
-	private HashMap<String,Color> ExistingColor = new HashMap<>();
+	public HashMap<String,Color> ExistingColor = new HashMap<>();
 	private HashMap<String,Double> colorValue = new HashMap<>();
 
 	ImageStatistics(BufferedImage image){
@@ -32,6 +34,7 @@ public class ImageStatistics {
 		value += c1.getBlue()*c2.getBlue();
 		norm=(c1.getGreen()+c1.getBlue()+c1.getRed())*(c2.getGreen()+c2.getBlue()+c2.getRed());
 		double ret = (double)value/(double)norm;
+		ret*=ret;
 		return (norm==0)?0:ret;
 	}
 
@@ -40,13 +43,18 @@ public class ImageStatistics {
 		for(int i=0;i<image.getHeight();i++){
 			for(int j=0;j<image.getWidth();j++){
 				for(String s:ExistingColor.keySet()){
-					colorValue.put(s,colorValue.get(s)+scalarProduct(new Color(image.getRGB(i,j)),ExistingColor.get(s)));
+					colorValue.put(s,colorValue.get(s)+scalarProduct(new Color(image.getRGB(j,i)),ExistingColor.get(s)));
 				}
 			}
 		}
+		final double max = colorValue.values().stream().mapToDouble(x -> (Double.valueOf(x))).max().getAsDouble();
 		for(String s:colorValue.keySet()){
-			colorValue.put(s,colorValue.get(s)/colorValue.values().stream().mapToDouble(x->(Double.valueOf(x))).sum());
+			colorValue.put(s,colorValue.get(s)/ max);
 		}
+	}
+
+	ArrayList<String> getDominant(double Threshold){
+		return colorValue.entrySet().stream().filter(x->(x.getValue()>Threshold)).map(Map.Entry::getKey).collect(Collectors.toCollection(ArrayList::new));
 	}
 
 	@Override
