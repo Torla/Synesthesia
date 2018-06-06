@@ -52,20 +52,24 @@ public class ImageStatistics {
 	}
 
 	private void  compute(){
-		Attribute arr[] = new Attribute[3];
+		Attribute arr[] = new Attribute[5];
 		arr[0] = new Attribute("Red");
 		arr[1] = new Attribute("Green");
 		arr[2] = new Attribute("Blue");
+		arr[3] = new Attribute("x");
+		arr[4] = new Attribute("y");
 		FastVector attrs = new FastVector(4);
 		for (Attribute x:arr) {attrs.addElement(x);}
 
-		Instances dataSet = new Instances("xxx",attrs,10);
+		Instances dataSet = new Instances("xxx",attrs,1000000);
 		for(int i=0;i<image.getWidth();i++){
 			for(int j=0;j<image.getHeight();j++){
-				double[] v = new double[3];
+				double[] v = new double[5];
 				v[0]=(new Color(image.getRGB(i,j)).getRed());
 				v[1]=(new Color(image.getRGB(i,j)).getGreen());
 				v[2]=(new Color(image.getRGB(i,j)).getBlue());
+				v[3]=(i);
+				v[4]=(j);
 				dataSet.add(new Instance(1,v));
 			}
 		}
