@@ -1,17 +1,29 @@
+import sun.java2d.pipe.SpanShapeRenderer;
+import weka.clusterers.SimpleKMeans;
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 
 public class ImageStatistics {
 
 	private BufferedImage image;
 	public HashMap<String,Color> ExistingColor = new HashMap<>();
 	private HashMap<String,Double> colorValue = new HashMap<>();
+	private SimpleKMeans model;
+	private static final int numCluster = 3;
 
-	ImageStatistics(BufferedImage image){
+		ImageStatistics(BufferedImage image){
 		this.image=image;
 		ExistingColor.put("DeepRed",new Color(82,0,0));
 		ExistingColor.put("Red",new Color(116,0,0));
@@ -40,44 +52,64 @@ public class ImageStatistics {
 	}
 
 	private void  compute(){
-		for(String s:ExistingColor.keySet()) {colorValue.put(s,0.);}
-		for(int i=0;i<image.getHeight();i++){
-			for(int j=0;j<image.getWidth();j++){
-				HashMap<String,Double> temp = new HashMap<>();
-				for(String s:ExistingColor.keySet()){
-					temp.put(s, distance(new Color(image.getRGB(j,i)),ExistingColor.get(s)));
-				}
-				String min = temp.entrySet().stream().min((x,y)->(Double.compare(x.getValue(),y.getValue()))).get().getKey();
-				colorValue.put(min,colorValue.get(min)+1);
+		Attribute arr[] = new Attribute[3];
+		arr[0] = new Attribute("Red");
+		arr[1] = new Attribute("Green");
+		arr[2] = new Attribute("Blue");
+		FastVector attrs = new FastVector(4);
+		for (Attribute x:arr) {attrs.addElement(x);}
+
+		Instances dataSet = new Instances("xxx",attrs,10);
+		for(int i=0;i<image.getWidth();i++){
+			for(int j=0;j<image.getHeight();j++){
+				double[] v = new double[3];
+				v[0]=(new Color(image.getRGB(i,j)).getRed());
+				v[1]=(new Color(image.getRGB(i,j)).getGreen());
+				v[2]=(new Color(image.getRGB(i,j)).getBlue());
+				dataSet.add(new Instance(1,v));
 			}
 		}
-		final double max = colorValue.values().stream().mapToDouble(x -> (Double.valueOf(x))).max().getAsDouble();
-		for(String s:colorValue.keySet()){
-			colorValue.put(s,colorValue.get(s)/ max);
+
+		SimpleKMeans model = new SimpleKMeans();
+		try {
+			model.setNumClusters(numCluster);
+			model.buildClusterer(dataSet);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		this.model=model;
+		//System.out.println(model.getClusterCentroids().toString());
 	}
 
-	ArrayList<String> getDominant(double threshold, int minNotes){
+	ArrayList<String> getDominant(){
 		ArrayList<String> ret = new ArrayList<>();
-		ArrayList<Map.Entry<String,Double>> sorted= colorValue.entrySet().stream()
-				.sorted((y,x)->(Double.compare(x.getValue(),y.getValue())))
-				.collect(Collectors.toCollection(ArrayList::new));
-
-		for(int i=0;i<sorted.size();i++) {
-			if(i<minNotes) ret.add(sorted.get(i).getKey());
-			else {
-				if(colorValue.get(ret.get(i-1))-colorValue.get(sorted.get(i).getKey())>threshold) break;
-				else ret.add(sorted.get(i).getKey());
-			}
+		for(Instance instance: (List<Instance>)Collections.list(model.getClusterCentroids().enumerateInstances())){
+			Color color = new Color((int)instance.value(0),(int)instance.value(1),(int)instance.value(2));
+			ret.add(ExistingColor.entrySet().stream().min((x,y)->Double.compare(distance(x.getValue(),color),distance(y.getValue(),color))).get().getKey());
 		}
-
 		return ret;
-
 	}
 
 	@Override
 	public String toString() {
 		return "\n" + image.toString() +
 				"\n" + colorValue.toString();
+	}
+
+	public void printImage() throws Exception{
+		BufferedImage imageOut = new BufferedImage(image.getWidth(),image.getHeight(),TYPE_3BYTE_BGR);
+		for(int i=0;i<image.getWidth();i++){
+			for(int j=0;j<image.getHeight();j++){
+				ArrayList<Instance> list =Collections.list(model.getClusterCentroids().enumerateInstances());
+				List<Color> c = list.stream().map(x -> new Color((int)x.value(0),(int)x.value(1),(int)x.value(2))).collect(Collectors.toList());
+				double[] v = new double[3];
+				v[0]=(new Color(image.getRGB(i,j)).getRed());
+				v[1]=(new Color(image.getRGB(i,j)).getGreen());
+				v[2]=(new Color(image.getRGB(i,j)).getBlue());
+				imageOut.setRGB(i,j,c.get(model.clusterInstance(new Instance(1,v))).getRGB());
+
+			}
+		}
+		ImageIO.write(imageOut, "jpg",new File("out.jpg"));
 	}
 }
