@@ -21,7 +21,9 @@ public class ImageStatistics {
 	public HashMap<String,Color> ExistingColor = new HashMap<>();
 	private HashMap<String,Double> colorValue = new HashMap<>();
 	private SimpleKMeans model;
-	private static final int numCluster = 3;
+
+	private static final int maxCluster = 10;
+	private static final double desiredStdDev = 30.;
 
 		ImageStatistics(BufferedImage image){
 		this.image=image;
@@ -52,28 +54,44 @@ public class ImageStatistics {
 	}
 
 	private void  compute(){
-		Attribute arr[] = new Attribute[5];
+		Attribute arr[] = new Attribute[3];
 		arr[0] = new Attribute("Red");
 		arr[1] = new Attribute("Green");
 		arr[2] = new Attribute("Blue");
-		arr[3] = new Attribute("x");
-		arr[4] = new Attribute("y");
 		FastVector attrs = new FastVector(4);
 		for (Attribute x:arr) {attrs.addElement(x);}
 
 		Instances dataSet = new Instances("xxx",attrs,1000000);
 		for(int i=0;i<image.getWidth();i++){
 			for(int j=0;j<image.getHeight();j++){
-				double[] v = new double[5];
+				double[] v = new double[3];
 				v[0]=(new Color(image.getRGB(i,j)).getRed());
 				v[1]=(new Color(image.getRGB(i,j)).getGreen());
 				v[2]=(new Color(image.getRGB(i,j)).getBlue());
-				v[3]=(i);
-				v[4]=(j);
 				dataSet.add(new Instance(1,v));
 			}
 		}
 
+		SimpleKMeans model=null;
+		for(int numCluster=1;numCluster<maxCluster;numCluster++){
+			model = createModel(dataSet,numCluster);
+			ArrayList<Instance> list =Collections.list(model.getClusterStandardDevs().enumerateInstances());
+			double stdDev = list.stream().flatMap(x -> {
+				ArrayList<Double> l = new ArrayList<>();
+				l.add(x.value(0));
+				l.add(x.value(1));
+				l.add(x.value(2));
+				return l.stream();
+			}).mapToDouble(x->x).average().getAsDouble();
+			System.out.println(list);
+			System.out.println(stdDev);
+			if(stdDev<=desiredStdDev)break;
+		}
+		this.model=model;
+
+	}
+
+	private SimpleKMeans createModel(Instances dataSet,int numCluster) {
 		SimpleKMeans model = new SimpleKMeans();
 		try {
 			model.setNumClusters(numCluster);
@@ -82,7 +100,7 @@ public class ImageStatistics {
 			e.printStackTrace();
 		}
 		this.model=model;
-		//System.out.println(model.getClusterCentroids().toString());
+		return model;
 	}
 
 	ArrayList<String> getDominant(){

@@ -17,6 +17,8 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.clusterers.*;
 
+import com.xuggle.ferry.*;
+
 import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 
 public class Test {
@@ -24,13 +26,12 @@ public class Test {
 
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("van.jpg"));
+			image = ImageIO.read(new File("nasi.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		ImageStatistics stats = new ImageStatistics(image);
-
 		System.out.println(stats.getDominant());
 
 
@@ -38,6 +39,8 @@ public class Test {
 		sound.save();
 
 		stats.printImage();
+
+
 
 
 
