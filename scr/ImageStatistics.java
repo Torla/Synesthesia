@@ -23,11 +23,11 @@ public class ImageStatistics {
 	private HashMap<String,Double> colorValue = new HashMap<>();
 	private SimpleKMeans model;
 
-	private static final int LowDefW=300;
-	private static final int LowDefH=300;
+	private static final int lowDefW=300;
+	private static final int lowDefH=300;
 
 	private static final int maxCluster = 10;
-	private static final double desiredStdDev = 30.;
+	private static final double desiredStdDev = 26.;
 
 		ImageStatistics(BufferedImage image){
 		this.image=image;
@@ -58,7 +58,7 @@ public class ImageStatistics {
 	}
 
 	private void  compute(){
-		BufferedImage image=lowDef(this.image,300,300);
+		BufferedImage image=lowDef(this.image,lowDefW,lowDefH);
 		Attribute arr[] = new Attribute[3];
 		arr[0] = new Attribute("Red");
 		arr[1] = new Attribute("Green");
@@ -123,8 +123,8 @@ public class ImageStatistics {
 				"\n" + colorValue.toString();
 	}
 
-	private  static BufferedImage lowDef(BufferedImage image,int w,int h){ //todo there are problems
-		BufferedImage imageLD = new BufferedImage(w+1,h+1,TYPE_3BYTE_BGR);
+ 	private  static BufferedImage lowDef(BufferedImage image,int w,int h){
+		BufferedImage imageLD = new BufferedImage(w,h,TYPE_3BYTE_BGR);
 		double ratioW=image.getWidth()/(double)w;
 		double ratioH=image.getHeight()/(double)h;
 		for(int i=0;i<w;i++){

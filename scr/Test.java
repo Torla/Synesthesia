@@ -1,32 +1,35 @@
+
+
+
+import org.jcodec.api.FrameGrab;
+
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-
-import weka.core.Attribute;
-import weka.core.FastVector;
-import weka.core.Instance;
-import weka.core.Instances;
-import weka.clusterers.*;
-
-import com.xuggle.ferry.*;
-
-import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 
 public class Test {
 	public static void main(String[] args) throws Exception{
 
+		//processImage("van.jpg");
+
+		BufferedImage frame = FrameGrab.getFrame(new File("video.mp4"),10);
+
+
+		File tempFile = new File("frame.jpg");
+		ImageIO.write(frame, "jpg", tempFile);
+
+
+
+
+	}
+
+	private static void processImage(String path) throws Exception {
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("image.jpg"));
+			image = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -40,6 +43,5 @@ public class Test {
 		sound.save();
 
 		stats.printImage();
-
 	}
 }
