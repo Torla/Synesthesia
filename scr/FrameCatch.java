@@ -18,7 +18,7 @@ public class FrameCatch {
 
 	public FrameCatch(String fileName){
 		try {
-			ch = NIOUtils.readableFileChannel(new File("video.mp4"));
+			ch = NIOUtils.readableFileChannel(new File(fileName));
 			grab=new FrameGrab(ch);
 			MP4Demuxer dm = new MP4Demuxer(ch);
 			DemuxerTrack vt = dm.getVideoTrack();

@@ -17,6 +17,7 @@ public class Sound {
 	private float[] buffer;
 	private byte[] byteBuffer;
 	private LinkedList<ArrayList<Double>> freq= new LinkedList<>();
+	private LinkedList<ArrayList<Double>> count= new LinkedList<>();
 
 
 	public Sound(int totFrame,double framaRate){
@@ -25,24 +26,26 @@ public class Sound {
 		byteBuffer = new byte[buffer.length * 2];
 	}
 
-	public void add(ArrayList<Double> frequency){
+	private void add(ArrayList<Double> frequency){
 		freq.addLast(frequency);
 	}
-	public void add(Chord chord){
+	public void add(Chord chord,ArrayList<Double> count){
 		add(chord.getFrequencies());
+		this.count.addLast(count);
 	}
 
 	private void produceTrack() {
 		int frame=0;
 		for(ArrayList<Double> frequencys:freq) {
 			ArrayList<Double> twoPiFs = new ArrayList<>();
+			int f=0;
 			for (double d : frequencys) {
-				twoPiFs.add(d * Math.PI * 2);
+				twoPiFs.add(d * Math.PI * 2 * count.get(frame).get(f));
 			}
 			for (int sample = (int) (frame*sampleRate/framePerSecond); sample <(int) ((frame+1)*sampleRate/framePerSecond) ; sample++) {
 				double time = sample / sampleRate;
 				for (Double d : twoPiFs) {
-					buffer[sample] += (float) (amplitude / twoPiFs.size() * Math.sin(d * time));
+					buffer[sample] += (float) (amplitude/ twoPiFs.size() * Math.sin(d * time));
 				}
 
 			}

@@ -20,7 +20,7 @@ public class Test {
 
 		//processImage("van.jpg");
 	FrameCatch frameCatch = new FrameCatch("video.mp4");
-	Sound sound= new Sound((int)frameCatch.getNumFrame(),29.97);
+	Sound sound= new Sound((int)frameCatch.getNumFrame(),30);
 	for(int i=0;i<frameCatch.getNumFrame();i++) {
 		BufferedImage image = frameCatch.getNextFrame();
 		System.out.println(i);
@@ -32,9 +32,9 @@ public class Test {
 		System.out.println(stats.getDominant());
 		System.out.println(ColorsToChord.convert(stats.getDominant()));
 
-		stats.printImage();
+		//stats.printImage();
 
-		sound.add(new Chord(ColorsToChord.convert(stats.getDominant()),0));
+		sound.add(new Chord(ColorsToChord.convert(stats.getDominant()),0),stats.getCount());
 
 
 	}

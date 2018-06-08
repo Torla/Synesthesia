@@ -1,4 +1,5 @@
 import sun.java2d.pipe.SpanShapeRenderer;
+import sun.security.jca.GetInstance;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Attribute;
 import weka.core.FastVector;
@@ -10,9 +11,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 
@@ -22,14 +25,15 @@ public class ImageStatistics {
 	public HashMap<String,Color> ExistingColor = new HashMap<>();
 	private HashMap<String,Double> colorValue = new HashMap<>();
 	private SimpleKMeans model;
+	private double[] pixelCount;
 
-	private static final int lowDefW=300;
-	private static final int lowDefH=300;
+	private static final int lowDefW=30;
+	private static final int lowDefH=30;
 
 	private static final int maxCluster = 10;
 	private static final double desiredStdDev = 26.;
 
-		ImageStatistics(BufferedImage image){
+	ImageStatistics(BufferedImage image){
 		this.image=image;
 		ExistingColor.put("DeepRed",new Color(82,0,0));
 		ExistingColor.put("Red",new Color(116,0,0));
@@ -92,6 +96,22 @@ public class ImageStatistics {
 			System.out.println(stdDev);*/
 			if(stdDev<=desiredStdDev)break;
 		}
+		//count
+		pixelCount=new double[model.getNumClusters()];
+		for(Instance instance:(List<Instance>)Collections.list(dataSet.enumerateInstances())){
+			try {
+				pixelCount[model.clusterInstance(instance)]++;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		double max=0;
+		for (double x:pixelCount) {max=(x>max)?x:max;}
+		for(int i=0;i<pixelCount.length;i++){
+			pixelCount[i]/= max;
+		}
+		System.out.println(Arrays.toString(pixelCount));
 		this.model=model;
 
 	}
@@ -108,12 +128,18 @@ public class ImageStatistics {
 		return model;
 	}
 
-	ArrayList<String> getDominant(){
+	public ArrayList<String> getDominant(){
 		ArrayList<String> ret = new ArrayList<>();
 		for(Instance instance: (List<Instance>)Collections.list(model.getClusterCentroids().enumerateInstances())){
 			Color color = new Color((int)instance.value(0),(int)instance.value(1),(int)instance.value(2));
-			ret.add(ExistingColor.entrySet().stream().min((x,y)->Double.compare(distance(x.getValue(),color),distance(y.getValue(),color))).get().getKey());
+			ret.add(ExistingColor.entrySet().stream().min(Comparator.comparingDouble(x -> distance(x.getValue(), color))).get().getKey());
 		}
+		return ret;
+	}
+
+	public ArrayList<Double> getCount(){
+		ArrayList<Double> ret=new ArrayList<>();
+		for (double x:pixelCount) ret.add(x);
 		return ret;
 	}
 
@@ -147,11 +173,11 @@ public class ImageStatistics {
 				imageLD.setRGB(i,j,new Color(r/(x*y),g/(x*y),b/(x*y)).getRGB());
 			}
 		}
-/*		try {
+		try {
 			ImageIO.write(imageLD,"jpg",new File("outLD.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 		return imageLD;
 	}
 
@@ -168,7 +194,6 @@ public class ImageStatistics {
 				v[2]=(new Color(image.getRGB(i,j)).getBlue());
 				imageOut.setRGB(i,j,c.get(model.clusterInstance(new Instance(1,v))).getRGB());
 				imageOutQ.setRGB(i,j,ExistingColor.get(this.getDominant().get(model.clusterInstance(new Instance(1,v)))).getRGB());
-
 			}
 		}
 		ImageIO.write(imageOut, "jpg",new File("out.jpg"));
