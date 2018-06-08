@@ -29,10 +29,14 @@ public class FrameCatch {
 	}
 	public BufferedImage getNextFrame(){
 		try {
-			return grab.seekToFramePrecise(current).getFrame();
+			return grab.seekToFramePrecise(current++).getFrame();
 		} catch (IOException | JCodecException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public long getNumFrame() {
+		return numFrame;
 	}
 }

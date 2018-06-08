@@ -20,25 +20,29 @@ public class Test {
 
 		//processImage("van.jpg");
 	FrameCatch frameCatch = new FrameCatch("video.mp4");
-	for(int i=0;i<544;i++) {
+	Sound sound= new Sound((int)frameCatch.getNumFrame(),29.97);
+	for(int i=0;i<frameCatch.getNumFrame();i++) {
 		BufferedImage image = frameCatch.getNextFrame();
 		System.out.println(i);
 		ImageStatistics stats = new ImageStatistics(image);
-		//System.out.println(stats.getDominant());
-		//System.out.println(ColorsToChord.convert(stats.getDominant()));
 
+		//File tempFile = new File("frame.jpg");
+		//ImageIO.write(image, "jpg", tempFile);
 
-		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant()),0));
-		sound.save();
+		System.out.println(stats.getDominant());
+		System.out.println(ColorsToChord.convert(stats.getDominant()));
 
 		stats.printImage();
+
+		sound.add(new Chord(ColorsToChord.convert(stats.getDominant()),0));
+
+
 	}
+		sound.save();
 
-	File tempFile = new File("frame.jpg");
-	//mageIO.write(image, "jpg", tempFile);
 
 	}
-
+/*
 	private static void processImage(String path) throws Exception {
 		BufferedImage image = null;
 		try {
@@ -56,5 +60,5 @@ public class Test {
 		sound.save();
 
 		stats.printImage();
-	}
+	}*/
 }

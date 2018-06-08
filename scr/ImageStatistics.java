@@ -88,8 +88,8 @@ public class ImageStatistics {
 				l.add(x.value(2));
 				return l.stream();
 			}).mapToDouble(x->x).average().getAsDouble();
-			System.out.println(list);
-			System.out.println(stdDev);
+			/*System.out.println(list);
+			System.out.println(stdDev);*/
 			if(stdDev<=desiredStdDev)break;
 		}
 		this.model=model;
@@ -147,11 +147,11 @@ public class ImageStatistics {
 				imageLD.setRGB(i,j,new Color(r/(x*y),g/(x*y),b/(x*y)).getRGB());
 			}
 		}
-		try {
+/*		try {
 			ImageIO.write(imageLD,"jpg",new File("outLD.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return imageLD;
 	}
 
