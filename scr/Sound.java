@@ -38,14 +38,16 @@ public class Sound {
 		int frame=0;
 		for(ArrayList<Double> frequencys:freq) {
 			ArrayList<Double> twoPiFs = new ArrayList<>();
-			int f=0;
+
 			for (double d : frequencys) {
-				twoPiFs.add(d * Math.PI * 2 * count.get(frame).get(f));
+				twoPiFs.add(d * Math.PI * 2 ); // todo remember this
 			}
 			for (int sample = (int) (frame*sampleRate/framePerSecond); sample <(int) ((frame+1)*sampleRate/framePerSecond) ; sample++) {
 				double time = sample / sampleRate;
+				int f=0;
 				for (Double d : twoPiFs) {
-					buffer[sample] += (float) (amplitude/ twoPiFs.size() * Math.sin(d * time));
+					buffer[sample] += (float) (count.get(frame).get(f) * amplitude/ twoPiFs.size() * Math.sin(d * time));
+					f++;
 				}
 
 			}

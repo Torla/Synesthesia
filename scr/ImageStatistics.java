@@ -110,6 +110,7 @@ public class ImageStatistics {
 		for (double x:pixelCount) {max=(x>max)?x:max;}
 		for(int i=0;i<pixelCount.length;i++){
 			pixelCount[i]/= max;
+			pixelCount[i]=(int)(pixelCount[i]*10)/10.;
 		}
 		System.out.println(Arrays.toString(pixelCount));
 		this.model=model;

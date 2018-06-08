@@ -19,9 +19,9 @@ public class Test {
 	public static void main(String[] args) throws Exception{
 
 		//processImage("van.jpg");
-	FrameCatch frameCatch = new FrameCatch("video.mp4");
-	Sound sound= new Sound((int)frameCatch.getNumFrame(),30);
-	for(int i=0;i<frameCatch.getNumFrame();i++) {
+	FrameCatch frameCatch = new FrameCatch("time.mp4");
+	Sound sound= new Sound((int)frameCatch.getNumFrame(),29.97);
+	for(int i=0;i<300;i++) {
 		BufferedImage image = frameCatch.getNextFrame();
 		System.out.println(i);
 		ImageStatistics stats = new ImageStatistics(image);
