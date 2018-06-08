@@ -33,9 +33,10 @@ public class Test {
 
 		ImageStatistics stats = new ImageStatistics(image);
 		System.out.println(stats.getDominant());
+		System.out.println(ColorsToChord.convert(stats.getDominant()));
 
 
-		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant())));
+		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant()),0));
 		sound.save();
 
 		stats.printImage();

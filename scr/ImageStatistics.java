@@ -67,8 +67,8 @@ public class ImageStatistics {
 		for (Attribute x:arr) {attrs.addElement(x);}
 
 		Instances dataSet = new Instances("xxx",attrs,1000000);
-		for(int i=0;i<image.getWidth();i+=5){
-			for(int j=0;j<image.getHeight();j+=5){
+		for(int i=0;i<image.getWidth();i++){
+			for(int j=0;j<image.getHeight();j++){
 				double[] v = new double[3];
 				v[0]=(new Color(image.getRGB(i,j)).getRed());
 				v[1]=(new Color(image.getRGB(i,j)).getGreen());
@@ -123,14 +123,14 @@ public class ImageStatistics {
 				"\n" + colorValue.toString();
 	}
 
-	private  static BufferedImage lowDef(BufferedImage image,int w,int h){
-		BufferedImage imageLD = new BufferedImage(w,h,TYPE_3BYTE_BGR);
-		int ratioW=image.getWidth()/w;
-		int ratioH=image.getHeight()/h;
+	private  static BufferedImage lowDef(BufferedImage image,int w,int h){ //todo there are problems
+		BufferedImage imageLD = new BufferedImage(w+1,h+1,TYPE_3BYTE_BGR);
+		double ratioW=image.getWidth()/(double)w;
+		double ratioH=image.getHeight()/(double)h;
 		for(int i=0;i<w;i++){
 			for(int j=0;j<h;j++){
-				int startW = i*ratioW;
-				int startH = j*ratioH;
+				int startW =(int) ((double)i*ratioW);
+				int startH = (int) ((double)j*ratioH);
 				int r=0;
 				int g=0;
 				int b=0;
@@ -157,6 +157,7 @@ public class ImageStatistics {
 
 	public void printImage() throws Exception{
 		BufferedImage imageOut = new BufferedImage(image.getWidth(),image.getHeight(),TYPE_3BYTE_BGR);
+		BufferedImage imageOutQ = new BufferedImage(image.getWidth(),image.getHeight(),TYPE_3BYTE_BGR);
 		for(int i=0;i<image.getWidth();i++){
 			for(int j=0;j<image.getHeight();j++){
 				ArrayList<Instance> list =Collections.list(model.getClusterCentroids().enumerateInstances());
@@ -166,9 +167,11 @@ public class ImageStatistics {
 				v[1]=(new Color(image.getRGB(i,j)).getGreen());
 				v[2]=(new Color(image.getRGB(i,j)).getBlue());
 				imageOut.setRGB(i,j,c.get(model.clusterInstance(new Instance(1,v))).getRGB());
+				imageOutQ.setRGB(i,j,ExistingColor.get(this.getDominant().get(model.clusterInstance(new Instance(1,v)))).getRGB());
 
 			}
 		}
 		ImageIO.write(imageOut, "jpg",new File("out.jpg"));
+		ImageIO.write(imageOutQ, "jpg",new File("outQ.jpg"));
 	}
 }

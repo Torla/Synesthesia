@@ -25,11 +25,11 @@ public class Chord {
 	private ArrayList<String> notes = new ArrayList<>();
 	private ArrayList<Double> frequencies = new ArrayList<>();
 
-	public Chord(ArrayList<String> list){
+	public Chord(ArrayList<String> list,double octaveShift){
 		notes.addAll(list);
 		for(String s:list){
 			//frequencies.add((noteToFrequencies.get(s)>=noteToFrequencies.get(list.get(0)))?noteToFrequencies.get(s):noteToFrequencies.get(s)*2);
-			frequencies.add(noteToFrequencies.get(s));
+			frequencies.add(noteToFrequencies.get(s)*(Math.pow(2,octaveShift)));
 		}
 	}
 
