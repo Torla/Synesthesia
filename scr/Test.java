@@ -26,7 +26,7 @@ public class Test {
 
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("nasi.jpg"));
+			image = ImageIO.read(new File("image.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,11 +39,6 @@ public class Test {
 		sound.save();
 
 		stats.printImage();
-
-
-
-
-
 
 	}
 }
