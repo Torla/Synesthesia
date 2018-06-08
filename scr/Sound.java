@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Sound {
 
 	static private double sampleRate=44100.0;
-	static private double seconds = 5.0;
+	static private double seconds = 1/25;
 	static private double amplitude = 0.8;
 	private float[] buffer = new float[(int) (seconds * sampleRate)];
 	private final byte[] byteBuffer = new byte[buffer.length * 2];

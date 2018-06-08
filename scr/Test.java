@@ -2,6 +2,10 @@
 
 
 import org.jcodec.api.FrameGrab;
+import org.jcodec.common.DemuxerTrack;
+import org.jcodec.common.FileChannelWrapper;
+import org.jcodec.common.NIOUtils;
+import org.jcodec.containers.mp4.demuxer.MP4Demuxer;
 
 
 import javax.imageio.ImageIO;
@@ -9,20 +13,29 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 
 public class Test {
 	public static void main(String[] args) throws Exception{
 
 		//processImage("van.jpg");
+	FrameCatch frameCatch = new FrameCatch("video.mp4");
+	for(int i=0;i<544;i++) {
+		BufferedImage image = frameCatch.getNextFrame();
+		System.out.println(i);
+		ImageStatistics stats = new ImageStatistics(image);
+		//System.out.println(stats.getDominant());
+		//System.out.println(ColorsToChord.convert(stats.getDominant()));
 
-		BufferedImage frame = FrameGrab.getFrame(new File("video.mp4"),10);
 
+		Sound sound= new Sound(new Chord(ColorsToChord.convert(stats.getDominant()),0));
+		sound.save();
 
-		File tempFile = new File("frame.jpg");
-		ImageIO.write(frame, "jpg", tempFile);
+		stats.printImage();
+	}
 
-
-
+	File tempFile = new File("frame.jpg");
+	//mageIO.write(image, "jpg", tempFile);
 
 	}
 
